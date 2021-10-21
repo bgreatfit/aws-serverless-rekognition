@@ -1,8 +1,8 @@
 import http.client as httplib
 import os
-import boto3
-
-from pynamodb.exceptions import DoesNotExist, DeleteError, UpdateError
+import requests
+from log_cfg import logger
+from pynamodb.exceptions import DoesNotExist
 from blob.asset_model import AssetModel
 
 
@@ -11,65 +11,31 @@ def event(event, context):
     key = event['Records'][0]['s3']['object']['key']
     blob_id = key.replace('{}/'.format(os.environ['S3_KEY_BASE']), '')
 
-    try:
-        if 'ObjectCreated:Put' == event_name:
+    if 'ObjectCreated:Put' == event_name:
 
-            try:
-                blob = AssetModel.get(hash_key=blob_id)
-                label_on_s3_upload(event, blob)
-                return {
-                    'statusCode': httplib.BAD_REQUEST,
-                    'body': {
-                        'error_message': 'Unable to update ASSET'}
-                }
-            except UpdateError:
-                return {
-                    'statusCode': httplib.BAD_REQUEST,
-                    'body': {
-                        'error_message': 'Unable to update ASSET'}
-                }
+        blob = AssetModel.get(hash_key=blob_id)
+        try:
+            result = blob.label_on_s3_upload(event)
+            blob.labels = result['image_labels']
+            blob.file_name = result['file_name']
+            blob.message = "success"
+            if blob.callback_url != '':
+                try:
+                    requests.post(f'{blob.callback_url}', json={"message": "success", "image_labels":
+                                                                result['image_labels']})
+                except ConnectionError as e:
+                    logger.error(f"blob.callback_url: {e} ", exc_info=True)
+                    blob.message = f"Wrong callback url {e}"
+            blob.save()
 
-        elif 'ObjectRemoved:Delete' == event_name:
-
-            try:
-                blob = AssetModel.get(hash_key=blob_id)
-                blob.delete()
-            except DeleteError:
-                return {
-                    'statusCode': httplib.BAD_REQUEST,
-                    'body': {
-                        'error_message': 'Unable to delete ASSET {}'.format(blob)
-                    }
-                }
-
-    except DoesNotExist:
-        return {
-            'statusCode': httplib.NOT_FOUND,
-            'body': {
-                'error_message': 'ASSET {} not found'.format(blob_id)
-            }
-        }
-
-    return {'statusCode': httplib.ACCEPTED}
+        except Exception as e:
+            blob.labels = []
+            blob.file_name = ''
+            blob.message = 'invalid image format, format may include: jpg,JPEG,png'
+            blob.save()
+            requests.post(f'{blob.callback_url}', json={"message": f"invalid image format, format may include:"
+                                                                   f" jpg,JPEG,png {e}"})
+            logger.error(f"blob.callback_url: {e} ", exc_info=True)
 
 
-def label_on_s3_upload(event_obj, blob):
-    bucket = os.environ['S3_BUCKET']
-    region_name = os.environ['REGION']
 
-    files_uploaded = event_obj['Records']
-    image_labels = []
-    file_name = ''
-    for file in files_uploaded:
-        file_name = file["s3"]["object"]["key"]
-        rekognition_client = boto3.client('rekognition', region_name=region_name)
-        response = rekognition_client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': file_name}},
-                                                    MaxLabels=5)
-        for label in response['Labels']:
-            image_labels.append(label["Name"].lower())
-
-    # Add to DynamoDB
-
-    blob.labels = image_labels
-    blob.file_name = file_name
-    blob.save()

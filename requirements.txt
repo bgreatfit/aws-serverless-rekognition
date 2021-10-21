@@ -2,3 +2,4 @@ pynamodb>=5-1-0
 boto3 #no-deploy
 botocore #no-deploy
 typing-extensions
+requests

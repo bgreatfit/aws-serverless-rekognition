@@ -32,6 +32,7 @@ class AssetModel(Model):
 
     blob_id = UnicodeAttribute(hash_key=True)
     state = UnicodeAttribute(null=False, default=State.CREATED.name)
+    message = UnicodeAttribute(null=True)
     callback_url = UnicodeAttribute(null=True)
     labels = ListAttribute(null=True)
     file_name = UnicodeAttribute(null=True)

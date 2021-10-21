@@ -1,7 +1,4 @@
 service: aws-serverless-image-rekognition
-
-frameworkVersion: "2.63.0"
-
 plugins:
   - serverless-python-requirements
 
@@ -99,13 +96,9 @@ functions:
     description: Called by s3 create events to manage blob state in dynamo
     events:
       - s3:
+          existing: true
           bucket: ${self:custom.s3_bucket}
           event: s3:ObjectCreated:*
-          rules:
-            - prefix: ${self:custom.s3_key_base}
-      - s3:
-          bucket: ${self:custom.s3_bucket}
-          event: s3:ObjectRemoved:*
           rules:
             - prefix: ${self:custom.s3_key_base}
 
