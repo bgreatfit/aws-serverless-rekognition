@@ -78,6 +78,16 @@ provider:
       Resource: ${self:custom.s3_role_resource}
 
 
+functions:
+  create:
+    name: ${self:custom.stack_name}-create
+    description: Generate a presigned URL for PUT upload
+    handler: blob/create.create
+    events:
+      - http:
+          path: blob
+          method: post
+          cors: true
 
 resources:
   Resources:
