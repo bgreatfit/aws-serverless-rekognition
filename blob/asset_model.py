@@ -76,3 +76,20 @@ class AssetModel(Model):
         logger.debug('upload URL: {}'.format(put_url))
         return put_url
 
+    def label_on_s3_upload(self, event_obj):
+        bucket = os.environ['S3_BUCKET']
+        region_name = os.environ['REGION']
+
+        files_uploaded = event_obj['Records']
+        image_labels = []
+        file_name = ''
+        for file in files_uploaded:
+            file_name = file["s3"]["object"]["key"]
+            rekognition_client = boto3.client('rekognition', region_name=region_name)
+            response = rekognition_client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': file_name}},
+                                                        MaxLabels=5)
+            for label in response['Labels']:
+                image_labels.append(label["Name"].lower())
+
+        return {"image_labels": image_labels, "file_name": file_name}
+

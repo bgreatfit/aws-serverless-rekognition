@@ -76,6 +76,10 @@ provider:
       Action:
         - s3:*
       Resource: ${self:custom.s3_role_resource}
+    - Effect: "Allow"
+      Action:
+        - "rekognition:*"
+      Resource: "*"
 
 
 functions:
@@ -88,6 +92,22 @@ functions:
           path: blob
           method: post
           cors: true
+
+  process_bob:
+    handler: blob/process_bob.event
+    name: ${self:custom.stack_name}-processBlob
+    description: Called by s3 create/remove events to manage blob state in dynamo
+    events:
+      - s3:
+          bucket: ${self:custom.s3_bucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: ${self:custom.s3_key_base}
+      - s3:
+          bucket: ${self:custom.s3_bucket}
+          event: s3:ObjectRemoved:*
+          rules:
+            - prefix: ${self:custom.s3_key_base}
 
 resources:
   Resources:
