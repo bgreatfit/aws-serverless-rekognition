@@ -96,7 +96,7 @@ functions:
   process_bob:
     handler: blob/process_bob.event
     name: ${self:custom.stack_name}-processBlob
-    description: Called by s3 create/remove events to manage blob state in dynamo
+    description: Called by s3 create events to manage blob state in dynamo
     events:
       - s3:
           bucket: ${self:custom.s3_bucket}
