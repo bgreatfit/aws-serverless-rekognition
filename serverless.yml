@@ -102,6 +102,16 @@ functions:
           rules:
             - prefix: ${self:custom.s3_key_base}
 
+  get:
+    handler: blob/get.get
+    name: ${self:custom.stack_name}-get
+    description: Get labels  for <blob-id>
+    events:
+      - http:
+          path: blob/{blob_id}
+          method: get
+          cors: true
+
 resources:
   Resources:
     GatewayResponseDefault4XX:
