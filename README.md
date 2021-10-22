@@ -42,18 +42,11 @@ Also, you can provide a callback url as a POST body params when creating a pres-
 
 Example,
 
-    curl -X POST \
-      https://xxxxxxxxxxxx.amazonaws.com/dev/blobs \
-      -H 'Content-Type: application/json' \
-      -H 'Postman-Token: f769a23f-d285-4aba-9fc1-f3d8dd4b9f33' \
-      -H 'cache-control: no-cache' \
-      -d '{"label":"Furniture"}'
+    curl --location --request POST 
+    'https://4mikiy5ev7.execute-api.us-west-2.amazonaws.com/dev/blobs' \
+--data-raw ''
     
-    curl -X GET \
-      https://xxxxxxxxxxxx.amazonaws.com/dev/blobs{blobID} \
-      -H 'Content-Type: application/json' \
-      -H 'Postman-Token: f769a23f-d285-4aba-9fc1-f3d8dd4b9f33' \
-      -H 'cache-control: no-cache' \
-      -d '{"label":"Furniture"}'
+    curl --location -g --request GET 
+    'https://4mikiy5ev7.execute-api.us-west-2.amazonaws.com/dev/blobs/{blob_id}'
       
 
