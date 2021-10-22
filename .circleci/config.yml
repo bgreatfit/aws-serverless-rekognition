@@ -33,11 +33,11 @@ jobs:
             sudo apt-get install -y nodejs
             node --version && npm -v
 
-      - run:
-          name: Install Serverless CLI and dependencies
-          command: |
-            sudo npm i -g serverless
-            sudo npm install
+#      - run:
+#          name: Install Serverless CLI and dependencies
+#          command: |
+#            sudo npm i -g serverless
+#            sudo npm install
 
       - save_cache:
           paths:
