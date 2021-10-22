@@ -1,5 +1,7 @@
 # Javascript Node CircleCI 2.0 configuration file
-
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
 version: 2
 jobs:
   build:
@@ -24,7 +26,6 @@ jobs:
           command: |
             sudo pip install nose
             sudo pip install coverage
-
       # this is slow. build a custom docker image and use that
       - run:
           name: Install node and npm
@@ -32,13 +33,11 @@ jobs:
             curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
             sudo apt-get install -y nodejs
             node --version && npm -v
-
       - run:
           name: Install Serverless CLI and dependencies
           command: |
             sudo npm i -g serverless
-            npm install
-
+            sudo npm install
       - save_cache:
           paths:
             - node_modules
@@ -49,8 +48,7 @@ jobs:
           name: Run tests with code coverage
           command: |
             nosetests --with-coverage
-
       # deploy app
       - run:
-          name: AWS Image Rekognition application
+          name: Deploy application
           command: sls deploy -v
