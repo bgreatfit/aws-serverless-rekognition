@@ -3,3 +3,4 @@ boto3 #no-deploy
 botocore #no-deploy
 typing-extensions
 requests
+pytest

@@ -1,0 +1,17 @@
+language: python
+env:
+  - BOTO_CONFIG=/dev/null
+python:
+  - "3.6"
+install:
+  - pip install -r requirements.txt
+  - npm install -g serverless
+  - sls plugin install -n serverless-python-equirements
+# command to run tests
+script:
+  - python -m pytest -v
+deploy:
+  provider: script
+  script: sls deploy
+  on:
+    branch: development
