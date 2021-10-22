@@ -1,0 +1,80 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Blobs
+  license:
+    name: MIT
+servers:
+  - url: http://blobs.swagger.io/v1
+paths:
+  /blobs:
+    post:
+      summary: Create a blob
+      description: Creates a new blob in the DynamoDB backend database and returns S3 presigned upload url
+      operationId: createBlob
+      tags:
+        - blobs
+      parameters:
+        - name: callback_url
+          in: body
+          description: user's callback url for server's callback action
+          required: false
+          schema:
+            type: string
+            format: string
+      responses:
+        '201':
+          description: A Blob id with S3 presigned upload url
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /blobs/{blobsId}:
+    get:
+      summary: Info for a specific blob
+      description: Returns a blob definition based on the given id
+      operationId: showBlobById
+      tags:
+        - blobs
+      parameters:
+        - name: blobsId
+          in: path
+          required: true
+          description: The id of the blob to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Blob"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Blob:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: string
+        callback_url:
+          type: string

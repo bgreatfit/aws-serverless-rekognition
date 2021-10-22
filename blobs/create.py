@@ -10,7 +10,7 @@ def create(event, context):
     data = json.loads(event['body']) if event['body'] else None
     if data is not None and 'callback_url' not in data:
         logging.error('Validation Failed')
-        return {'statusCode': 422,
+        return {'statusCode': 400,
                 'body': json.dumps({'error_message': 'Callback Url cannot be empty'})}
 
     callback_url = data['callback_url'] if data is not None else ''
