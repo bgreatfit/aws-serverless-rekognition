@@ -104,16 +104,6 @@ functions:
           rules:
             - prefix: ${self:custom.s3_key_base}
 
-  get:
-    handler: blobs/get.get
-    name: ${self:custom.stack_name}-get
-    description: Get labels  for <blob-id>
-    events:
-      - http:
-          path: blobs/{blob_id}
-          method: get
-          cors: true
-
   makeCallBack:
     handler: blobs/make_callback.event
     name: ${self:custom.stack_name}-makeCallBack
