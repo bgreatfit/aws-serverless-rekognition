@@ -1,7 +1,7 @@
 import json
 import http.client as httplib
 from pynamodb.exceptions import DoesNotExist
-from blob.asset_model import AssetModel
+from blobs.asset_model import AssetModel
 from log_cfg import logger
 
 

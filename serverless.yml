@@ -67,6 +67,8 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTable
+        - dynamodb:DescribeStream
+        - dynamodb:ListStreams
       Resource: ${self:custom.dynamodb_arn}
 
     - Effect: Allow
@@ -81,17 +83,17 @@ provider:
 
 functions:
   create:
-    name: ${self:custom.stack_name}-create
+    name: ${self:custom.stack_name}-createBlob
     description: Generate a presigned URL for PUT upload
-    handler: blob/create.create
+    handler: blobs/create.create
     events:
       - http:
-          path: blob
+          path: blobs
           method: post
           cors: true
 
   process_bob:
-    handler: blob/process_bob.event
+    handler: blobs/process_bob.event
     name: ${self:custom.stack_name}-processBlob
     description: Called by s3 create events to manage blob state in dynamo
     events:
@@ -103,14 +105,25 @@ functions:
             - prefix: ${self:custom.s3_key_base}
 
   get:
-    handler: blob/get.get
+    handler: blobs/get.get
     name: ${self:custom.stack_name}-get
     description: Get labels  for <blob-id>
     events:
       - http:
-          path: blob/{blob_id}
+          path: blobs/{blob_id}
           method: get
           cors: true
+
+  makeCallBack:
+    handler: blobs/make_callback.event
+    name: ${self:custom.stack_name}-makeCallBack
+    description: Get a presigned download url for <blob-id>
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          arn:
+            Fn::GetAtt: [ blobDynamoDbTable, StreamArn ]
 
 resources:
   Resources:
@@ -140,4 +153,6 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
         TableName: ${self:custom.dynamodb_table}

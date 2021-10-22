@@ -13,12 +13,8 @@ KEY_BASE = os.environ['S3_KEY_BASE']
 class State(Enum):
     """
     Manage asset states in dynamo with a string field
-    Could have used an int as well, or used a custom serializer which is a bit cleaner.
     """
     CREATED = 1
-    RECEIVED = 2
-    UPLOADED = 3
-    DELETED = 4
 
 
 class AssetModel(Model):
@@ -78,6 +74,10 @@ class AssetModel(Model):
         return put_url
 
     def label_on_s3_upload(self, event_obj):
+        """
+                :param event_obj: aws Event Object
+                :return: image labels
+        """
         bucket = os.environ['S3_BUCKET']
         region_name = os.environ['REGION']
 

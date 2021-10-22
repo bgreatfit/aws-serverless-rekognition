@@ -1,7 +1,7 @@
 import uuid
 import json
 import logging
-from blob.asset_model import AssetModel
+from blobs.asset_model import AssetModel
 from log_cfg import logger
 
 
