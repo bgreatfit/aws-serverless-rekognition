@@ -1,10 +1,13 @@
 version: 2.1
 orbs:
-   aws-cli: circleci/aws-cli@2.0
-   serverless: circleci/serverless-framework@2.0
+   aws-cli: circleci/aws-cli@1.0
+   serverless: circleci/serverless-framework@1.0
 jobs:
    one:
      executor: serverless/default
+     docker:
+       # specify the version you desire here
+       - image: circleci/python:3.6.1
      steps:
        - checkout
        - aws-cli/setup
