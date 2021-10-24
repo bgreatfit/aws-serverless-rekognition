@@ -11,6 +11,7 @@ def event(event, context):
     if 'ObjectCreated:Put' == event_name:
 
         blob = AssetModel.get(hash_key=blob_id)
+        blob.state = "STARTED"
         try:
             result = blob.label_on_s3_upload(event)
             blob.labels = result['image_labels']
@@ -22,7 +23,6 @@ def event(event, context):
             blob.labels = []
             blob.file_name = ''
             blob.message = 'invalid image format, format may include: jpg,png'
-            blob.state = "RETRY"
             blob.save()
             logger.error(f"Image: {e} ", exc_info=True)
 

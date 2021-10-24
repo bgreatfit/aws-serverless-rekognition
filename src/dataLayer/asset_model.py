@@ -89,6 +89,7 @@ class AssetModel(Model):
             rekognition_client = boto3.client('rekognition', region_name=region_name)
             response = rekognition_client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': file_name}},
                                                         MaxLabels=5)
+            print(f"response {response}")
             for label in response['Labels']:
                 image_labels.append(label["Name"].lower())
 

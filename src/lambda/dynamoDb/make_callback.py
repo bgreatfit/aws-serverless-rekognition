@@ -20,7 +20,7 @@ def event(event, context):
                     blob.save()
                     requests.post(f'{callback_url}', json={"message": message, "image_labels": image_labels})
                 except ConnectionError as e:
-                    logger.error(f"blob.callback_url: {e} ", exc_info=True)
+                    logger.error(f"callback_url: {e} ", exc_info=True)
                     requests.post(f'{callback_url}', json={"message": f"Callback url {e}",
                                                            "image_labels": image_labels})
 

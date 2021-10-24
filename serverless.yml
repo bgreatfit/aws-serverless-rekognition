@@ -46,6 +46,7 @@ provider:
   name: aws
   runtime: python3.6
   region: us-west-2
+  lambdaHashingVersion: 20201221
   tracing:
     lambda: true
     apiGateway: true
@@ -85,7 +86,7 @@ functions:
   create:
     name: ${self:custom.stack_name}-createBlob
     description: Generate a presigned URL for PUT upload
-    handler: blobs/create.create
+    handler: src/lambda/http/create.create
     events:
       - http:
           path: blobs
@@ -93,7 +94,7 @@ functions:
           cors: true
 
   process_bob:
-    handler: blobs/process_bob.event
+    handler: src/lambda/s3/process_bob.event
     name: ${self:custom.stack_name}-processBlob
     description: Called by s3 create events to manage blob state in dynamo
     events:
@@ -105,7 +106,7 @@ functions:
             - prefix: ${self:custom.s3_key_base}
 
   makeCallBack:
-    handler: blobs/make_callback.event
+    handler: src/lambda/dynamoDb/make_callback.event
     name: ${self:custom.stack_name}-makeCallBack
     description: Get a presigned download url for <blob-id>
     events:
