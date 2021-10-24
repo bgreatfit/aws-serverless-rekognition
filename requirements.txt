@@ -4,3 +4,4 @@ botocore #no-deploy
 typing-extensions
 requests
 pytest
+moto[all]

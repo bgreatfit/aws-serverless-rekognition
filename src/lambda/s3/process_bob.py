@@ -1,6 +1,6 @@
 import os
 from log_cfg import logger
-from blobs.asset_model import AssetModel
+from src.dataLayer.asset_model import AssetModel
 
 
 def event(event, context):
