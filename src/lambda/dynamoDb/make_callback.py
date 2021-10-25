@@ -13,6 +13,7 @@ def event(event, context):
             image_labels = r['dynamodb']['NewImage']['labels']['L']
             blob_id = r['dynamodb']['NewImage']['blob_id']['S']
             message = r['dynamodb']['NewImage']['message']['S']
+
             blob = AssetModel.get(hash_key=blob_id)
             if callback_url != '':
                 try:

@@ -53,4 +53,4 @@ jobs:
       # deploy app
       - run:
           name: AWS Image Rekognition application
-          command: sls deploy -v
+          command: sls deploy

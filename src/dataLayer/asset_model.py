@@ -6,6 +6,7 @@ from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute, ListAttr
 from pynamodb.models import Model
 from log_cfg import logger
 from botocore.client import Config
+
 BUCKET = os.environ['S3_BUCKET']
 KEY_BASE = os.environ['S3_KEY_BASE']
 
@@ -89,9 +90,7 @@ class AssetModel(Model):
             rekognition_client = boto3.client('rekognition', region_name=region_name)
             response = rekognition_client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': file_name}},
                                                         MaxLabels=5)
-            print(f"response {response}")
             for label in response['Labels']:
-                image_labels.append(label["Name"].lower())
+                image_labels.append({"label_name": label["Name"].lower(), "confidence": label["Confidence"]})
 
         return {"image_labels": image_labels, "file_name": file_name}
-
