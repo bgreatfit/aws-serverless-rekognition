@@ -6,7 +6,7 @@
 
 Storing images in S3 Bucket with label information. **AWS Rekognition** is used for detecting labels in image. You can later query the API endpoint provided by this serverless service to get the list of images which belongs to particular label. 
 
-On deploying, this provisions 2 Lambda functions in your AWS setup. One Lambda function is responsible to store the image labels on each successful PUT operation in specified S3 bucket. The other Lambda function is used to retrieve the images of a particular label.
+On deploying, this provisions 3 Lambda functions in your AWS setup. One Lambda function is responsible to create a presigned url for image upload,the other  store the image labels on each successful PUT operation in specified S3 bucket. The final Lambda function is used to process the call back url trigger by dynamoDb stream.
 
 #### Usage
 
