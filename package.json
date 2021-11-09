@@ -4,8 +4,9 @@
   "description": "Serverless signed uploader REST API using pynamodb, s3 generated events, custom log format, and DRY serverless.yml with custom section",
   "author": "Mike Great",
   "license": "MIT",
-  "dependencies": {
-    "serverless-python-requirements": "^5.0.1"
-  },
-  "predeploy": "chmod +x node_modules/serverless/bin/serverless"
+  "dependencies": {},
+  "predeploy": "chmod +x node_modules/serverless/bin/serverless",
+  "devDependencies": {
+    "serverless-python-requirements": "^5.1.1"
+  }
 }

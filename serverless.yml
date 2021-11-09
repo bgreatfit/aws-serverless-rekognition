@@ -1,7 +1,6 @@
 service: aws-serverless-image-rekognition
 plugins:
   - serverless-python-requirements
-
 package:
   exclude:
     - node_modules/**
@@ -22,7 +21,7 @@ package:
 # --stage               test
 # --deletion_policy     delete
 custom:
-  app_acronym: aws-serverless-image-rekognition
+  app_acronym: aws-serverless-image-rekognition-v5
   default_stage: dev
   stage: ${opt:stage, self:custom.default_stage}
   stack_name: ${self:custom.app_acronym}-${self:custom.stage}
@@ -99,7 +98,6 @@ functions:
     description: Called by s3 create events to manage blob state in dynamo
     events:
       - s3:
-          existing: true
           bucket: ${self:custom.s3_bucket}
           event: s3:ObjectCreated:*
           rules:

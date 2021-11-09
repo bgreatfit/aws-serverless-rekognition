@@ -59,8 +59,14 @@ class AssetModel(Model):
         """
         :param ttl: url duration in seconds
         :return: a temporary presigned PUT url
+
         """
-        s3 = boto3.client('s3', config=Config(signature_version='s3v4'), region_name='us-west-2')
+        region = os.environ['REGION']
+        my_config = Config(
+            region_name=region,
+            signature_version='s3v4',
+        )
+        s3 = boto3.client('s3', config=my_config)
 
         put_url = s3.generate_presigned_url(
             ClientMethod='put_object',
