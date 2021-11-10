@@ -43,9 +43,9 @@ Also, you can provide a callback url as a POST body params when creating a pres-
 Example,
 
     curl --location --request POST 
-    'https://xd6sm73a1c.execute-api.us-west-2.amazonaws.com/dev/blobs' \--data-raw ''
+    ' https://4p6353orce.execute-api.us-west-2.amazonaws.com/dev/blobs' \--data-raw ''
     
     curl --location -g --request GET 
-    'https://xd6sm73a1c.execute-api.us-west-2.amazonaws.com/dev/blobs/{blob_id}'
+    ' https://4p6353orce.execute-api.us-west-2.amazonaws.com/dev/blobs/{blob_id}'
       
 

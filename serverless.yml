@@ -65,10 +65,6 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-        - dynamodb:DescribeTable
-        - dynamodb:DescribeStream
-        - dynamodb:ListStreams
       Resource: ${self:custom.dynamodb_arn}
 
     - Effect: Allow
